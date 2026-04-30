@@ -77,7 +77,7 @@ export function ProductListPage() {
         </View>
 
         {/* Add button */}
-        <TouchableOpacity style={styles.addButton} onPress={() => { }} testID="add-button">
+        <TouchableOpacity style={styles.addButton} onPress={() => router.push('/products/register')} testID="add-button">
           <Text style={styles.addButtonText}>Agregar</Text>
         </TouchableOpacity>
 
