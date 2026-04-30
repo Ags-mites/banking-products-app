@@ -122,7 +122,6 @@ export function useProductRegistration() {
       await createProduct(form);
 
       setSuccessMessage('¡Producto registrado exitosamente!');
-      handleReset();
     } catch {
       setNetworkError('Error de conexión. Verifica tu red e intenta de nuevo.');
     } finally {

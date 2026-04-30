@@ -89,7 +89,7 @@ export function ProductListPage() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.appBackground,
+    backgroundColor: colors.white,
   },
   card: {
     flex: 1,

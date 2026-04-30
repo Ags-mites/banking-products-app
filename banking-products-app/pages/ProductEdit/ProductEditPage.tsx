@@ -41,7 +41,6 @@ export function ProductEditPage() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.card}>
 
             <View style={styles.header}>
               <CashIcon size={20} color={colors.primary} />
@@ -153,7 +152,6 @@ export function ProductEditPage() {
               </>
             )}
 
-          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -163,7 +161,7 @@ export function ProductEditPage() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.appBackground,
+    backgroundColor: colors.white,
   },
   keyboardView: {
     flex: 1,
