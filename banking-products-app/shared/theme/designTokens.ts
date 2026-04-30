@@ -1,14 +1,15 @@
-// src/shared/theme/designTokens.ts — Design Tokens
-// Basado en .claude/docs/design-system.md
-
 export const colors = {
   primary: '#0F265C',
   accent: '#FFD200',
   background: '#FFFFFF',
+  appBackground: '#F5F5F5',
   surface: '#F4F6F9',
   border: '#E0E0E0',
+  itemBorder: '#EEEEEE',
   error: '#D32F2F',
+  textPrimary: '#2C3E50',
   textMuted: '#757575',
+  textSecondary: '#888888',
   white: '#FFFFFF',
   black: '#000000',
 };
@@ -58,14 +59,22 @@ export const borderRadius = {
   sm: 4,
   md: 8,
   lg: 12,
+  xl: 16,
 };
 
 export const shadows = {
   card: {
     shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  listCard: {
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
     elevation: 2,
   },
 };

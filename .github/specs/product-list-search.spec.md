@@ -1,6 +1,6 @@
 ---
 id: SPEC-001
-status: APPROVED
+status: IN_PROGRESS
 feature: product-list-search
 created: 2026-04-30
 updated: 2026-04-30
@@ -217,12 +217,12 @@ src/
 ### Frontend
 
 #### Implementación
-- [ ] Crear `entities/product/product.types.ts` — tipo `Product`
-- [ ] Crear `entities/product/productApi.ts` — función `getProducts()` con Axios
-- [ ] Crear `features/productSearch/useProductSearch.ts` — hook con fetch + filtrado reactivo
-- [ ] Implementar `shared/ui/ProductItem/ProductItem.tsx` + estilos StyleSheet
-- [ ] Implementar `pages/ProductList/ProductListPage.tsx` + estilos StyleSheet (buscador, contador, lista, estado vacío, loading, error)
-- [ ] Registrar ruta `/products` en `app/products/index.tsx` (Expo Router)
+- [x] Crear `entities/product/product.types.ts` — tipo `Product`
+- [x] Crear `entities/product/productApi.ts` — función `getProducts()` con Axios
+- [x] Crear `features/productSearch/useProductSearch.ts` — hook con fetch + filtrado reactivo
+- [x] Implementar `shared/ui/ProductItem/ProductItem.tsx` + estilos StyleSheet
+- [x] Implementar `pages/ProductList/ProductListPage.tsx` + estilos StyleSheet (buscador, contador, lista, estado vacío, loading, error)
+- [x] Registrar ruta `/products` en `app/products/index.tsx` (Expo Router)
 
 #### Tests Frontend
 - [ ] `[ProductItem] renders product name and ID`
