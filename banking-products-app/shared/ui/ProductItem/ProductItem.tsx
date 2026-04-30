@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Product } from '../../../entities/product/product.types';
+import { ChevronRightIcon } from '../icons/ChevronRightIcon';
 import { colors, spacing } from '../../theme/designTokens';
 
 type Props = {
@@ -10,24 +11,30 @@ type Props = {
 export function ProductItem({ product, onPress }: Props) {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress} testID="product-item">
-      <View style={styles.info}>
-        <Text style={styles.name} numberOfLines={1}>
-          {product.name}
-        </Text>
-        <Text style={styles.id} numberOfLines={1}>
-          {product.id}
-        </Text>
+      <View style={styles.content}>
+        <View style={styles.info}>
+          <Text style={styles.name} numberOfLines={1}>
+            {product.name}
+          </Text>
+          <Text style={styles.id} numberOfLines={1}>
+            ID: {product.id}
+          </Text>
+        </View>
+        <ChevronRightIcon size={18} color="#CCCCCC" />
       </View>
-      <Text style={styles.chevron}>{'>'}</Text>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: colors.white,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  content: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.white,
     paddingHorizontal: spacing.lg,
     paddingVertical: 14,
   },
@@ -37,16 +44,11 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 15,
     fontWeight: '600',
-    color: colors.textPrimary,
+    color: colors.primary,
   },
   id: {
     fontSize: 12,
-    color: colors.textSecondary,
+    color: colors.textMuted,
     marginTop: spacing.xs,
-  },
-  chevron: {
-    fontSize: 13,
-    color: '#CCCCCC',
-    marginLeft: spacing.sm,
   },
 });

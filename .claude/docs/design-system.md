@@ -1,96 +1,217 @@
 # Banco Design System (React Native)
 
 ## 1. Visual Theme
-Diseño minimalista, corporativo tipo app bancaria. Fondo de pantalla gris muy claro con tarjetas blancas centradas, bordes redondeados y sombras sutiles. Acentos en azul marino institucional y llamadas a la acción en amarillo.
+Diseño minimalista, corporativo tipo app bancaria. Fondo de pantalla gris muy claro con tarjeta blanca que ocupa toda la pantalla, bordes redondeados y sombras sutiles. Acentos en azul marino institucional y llamadas a la acción en amarillo.
 
 ## 2. Paleta de Colores
 
-- **Primary (Textos, Header, Iconos institucionales):** `#0F265C` (Azul Marino)
-- **Text Primary (Nombres en lista):** `#2C3E50` (Gris oscuro / Azul suave)
-- **Text Muted (Counters, placeholders):** `#757575`
-- **Text Secondary (IDs, subtextos):** `#888888`
-- **Accent (Botón Principal):** `#FFD200` (Amarillo Banco)
-- **Background (Fondo de tarjetas y pantallas):** `#FFFFFF`
-- **App Background (Fondo general de pantalla):** `#F5F5F5` (Gris muy claro)
-- **Surface (Inputs deshabilitados, Botones secundarios):** `#F4F6F9`
-- **Border / Dividers:** `#E0E0E0` (Gris claro)
-- **Item Border (Separadores en listas):** `#EEEEEE` (Gris muy tenue)
-- **Error / Danger:** `#D32F2F` (Rojo para botón eliminar y textos de error)
+Todos los colores se importan desde `shared/theme/designTokens.ts` → `colors`.
 
-## 3. Tipografía (Core React Native)
-No usar fuentes externas a menos que se requiera. Usar `System`.
+| Token              | Valor       | Uso                                              |
+|--------------------|-------------|--------------------------------------------------|
+| `primary`          | `#0F265C`   | Textos principales, header, iconos, nombre de ítem |
+| `textPrimary`      | `#2C3E50`   | Input text color, textos de cuerpo               |
+| `textMuted`        | `#757575`   | ID/subtexto de ítem, texto vacío, contador        |
+| `textSecondary`    | `#888888`   | Placeholder del input de búsqueda                 |
+| `accent`           | `#FFD200`   | Botón principal (Agregar)                         |
+| `background`       | `#FFFFFF`   | Fondo de cards y items                           |
+| `appBackground`    | `#F5F5F5`   | Fondo general de pantalla (SafeAreaView)          |
+| `surface`          | `#F4F6F9`   | Inputs deshabilitados, botones secundarios        |
+| `border`           | `#E0E0E0`   | Bordes de inputs, cards, header separator         |
+| `itemBorder`       | `#EEEEEE`   | Separadores entre ítems de lista                 |
+| `error`            | `#D32F2F`   | Textos de error, botón eliminar                  |
+| `white`            | `#FFFFFF`   | Alias explícito para backgrounds blancos         |
+| `black`            | `#000000`   | Base de sombras                                  |
 
-- **Title (Header de página):** 17px, weight 600, color Primary.
-- **Heading:** 24px, bold, color Primary.
-- **Body:** 16px, regular.
-- **Item Name:** 15px, weight 600, color Text Primary (`#2C3E50`).
-- **Item ID / Subtitle:** 12–13px, regular, color Text Secondary (`#888`).
-- **Caption (Error):** 12px, regular, color Error.
-- **Label:** 14px, bold, color Primary.
+**Chevron del ítem:** `#CCCCCC` (hardcoded en `ProductItem`, no está en tokens).
 
-## 4. Componentes (Maquetación Pura - StyleSheet)
+## 3. Tipografía
+
+### Fuentes
+Librería: `expo-google-fonts` con `NotoSerifToto`. Tokens en `fonts`.
+
+```ts
+fonts.regular  → 'NotoSerifToto_400Regular'
+fonts.semiBold → 'NotoSerifToto_600SemiBold'
+fonts.bold     → 'NotoSerifToto_700Bold'
+```
+
+### Escala de texto (tokens en `typography`)
+
+| Rol          | fontSize | fontWeight | color     | Uso                              |
+|--------------|----------|------------|-----------|----------------------------------|
+| `heading`    | 24px     | bold       | primary   | Títulos de sección               |
+| `title`      | 20px     | bold       | primary   | (token base, no usado directo)   |
+| `body`       | 16px     | normal     | primary   | Texto general                    |
+| `label`      | 14px     | bold       | primary   | Etiquetas de formulario          |
+| `button`     | 16px     | bold       | —         | Texto de botones                 |
+| `caption`    | 12px     | normal     | error     | Mensajes de error                |
+
+### Estilos usados directamente en pantalla (sin token de typography)
+
+| Elemento                  | fontSize | fontFamily       | color          |
+|---------------------------|----------|------------------|----------------|
+| Header "BANCO"            | 17px     | `fonts.bold`     | `primary`      |
+| Search input              | 15px     | System           | `textPrimary`  |
+| Nombre de ítem            | 15px     | fontWeight '600' | `primary`      |
+| ID de ítem                | 12px     | System           | `textMuted`    |
+| Texto vacío / error lista | 14px     | System           | `textMuted` / `error` |
+| Contador (counter)        | 13px     | System           | `textMuted`    |
+
+## 4. Espaciado
+
+Tokens en `spacing` (todos en px):
+
+| Token   | Valor | Usos frecuentes                                   |
+|---------|-------|---------------------------------------------------|
+| `xs`    | 4px   | `marginTop` entre nombre e ID del ítem            |
+| `sm`    | 8px   | Margen izquierdo del título en header             |
+| `md`    | 12px  | `paddingHorizontal` del search input, `paddingBottom` del header |
+| `lg`    | 16px  | `paddingHorizontal` de ítems, `paddingVertical` del botón |
+| `xl`    | 24px  | `padding` de la card principal, `paddingHorizontal` del header |
+| `xxl`   | 32px  | `marginBottom` del search input, `marginTop` del botón Agregar, padding de estado vacío |
+| `xxxl`  | 40px  | `marginBottom` del header (separación al contenido) |
+
+## 5. Border Radius
+
+Tokens en `borderRadius`:
+
+| Token | Valor | Uso                                    |
+|-------|-------|----------------------------------------|
+| `sm`  | 4px   | Search input, botón Agregar            |
+| `md`  | 8px   | List card container                    |
+| `lg`  | 12px  | (disponible, no usado aún)             |
+| `xl`  | 16px  | Card principal (SafeAreaView container)|
+
+## 6. Sombras
+
+Tokens en `shadows`:
+
+```ts
+shadows.card      → shadowOpacity: 0.08, shadowRadius: 8, elevation: 3   // Card principal
+shadows.listCard  → shadowOpacity: 0.05, shadowRadius: 4, elevation: 2   // List card container
+```
+
+Ambas con `shadowColor: black` y `shadowOffset: { width: 0, height: 1/2 }`.
+
+## 7. Componentes
 
 ### Screen Layout
-- Fondo de pantalla: `#F5F5F5` (App Background)
-- Contenedor principal (tarjeta blanca): `backgroundColor: #FFFFFF`, `borderRadius: 16`, sombra suave, `padding: 24`
-- Sombra principal: `shadowOpacity: 0.08, shadowRadius: 8, elevation: 3`
+
+```
+SafeAreaView (flex: 1, backgroundColor: appBackground #F5F5F5)
+└── View card (flex: 1, white, borderRadius: xl=16, padding: xl=24, shadow: card)
+    ├── Header
+    ├── TextInput Search
+    ├── View listCard (flex: 1)
+    └── TouchableOpacity addButton
+```
 
 ### Header de Pantalla
-- `flexDirection: 'row'`, `alignItems: 'center'`
-- Ícono pequeño (Ionicons `business-outline`, 18px, color Primary) + margen derecho 8px
-- Texto: 17px, weight 600, color Primary
-- Separación inferior: 24px
 
-### Input / Search Bar
-- Altura: 44px
-- `borderWidth: 1`, `borderColor: #E0E0E0`
-- `borderRadius: 12`
-- `paddingHorizontal: 12`
-- `fontSize: 15`, color Text Primary
-- Placeholder color: `#888888`
-- Separación inferior: 24px
+```
+flexDirection: 'row'
+alignItems: 'center'
+justifyContent: 'center'
+marginHorizontal: -24px   ← sangría negativa para que el borde llegue al filo de la card
+paddingHorizontal: 24px
+paddingBottom: 12px       (spacing.md)
+marginBottom: 40px        (spacing.xxxl)
+borderBottomWidth: 1
+borderBottomColor: #E0E0E0
+```
+
+- Ícono: `CashIcon` size=20, color=primary `#0F265C` (SVG custom via react-native-svg)
+- Texto: 17px, `fonts.bold`, color primary, `marginLeft: 8px`
+
+### Search Input
+
+```
+height: 44px
+borderWidth: 1
+borderColor: #E0E0E0
+borderRadius: 4px         (borderRadius.sm)
+paddingHorizontal: 12px   (spacing.md)
+fontSize: 15
+color: #2C3E50            (textPrimary)
+backgroundColor: #FFFFFF
+marginBottom: 32px        (spacing.xxl)
+placeholder color: #888888 (textSecondary)
+```
 
 ### List Card Container
-- `backgroundColor: #FFFFFF`
-- `borderRadius: 12`
-- `borderWidth: 1`, `borderColor: #E0E0E0`
-- `overflow: 'hidden'`
-- Sombra sutil: `shadowOpacity: 0.05, shadowRadius: 4, elevation: 2`
 
-### List Item (ProductItem)
-- `flexDirection: 'row'`, `alignItems: 'center'`, `paddingHorizontal: 16`, `paddingVertical: 14`
-- Nombre: 15px, weight 600, `#2C3E50`
-- ID/subtexto: 12px, `#888888`, `marginTop: 4`
-- Chevron `>`: 13px, `#CCCCCC`
-- Separador entre ítems: `height: 1, backgroundColor: #EEEEEE, marginHorizontal: 16`
-- Último elemento: sin separador (usar `ItemSeparatorComponent`)
+```
+flex: 1
+backgroundColor: #FFFFFF
+borderRadius: 8px         (borderRadius.md)
+borderWidth: 1
+borderColor: #E0E0E0
+overflow: 'hidden'
+shadow: shadows.listCard  (elevation: 2)
+```
 
-### Button Primary
-- Background `#FFD200`
-- `borderRadius: 4`
-- `paddingVertical: 16`
-- Texto centrado color `#0F265C`, `fontWeight: 'bold'`
+### ProductItem
 
-### Button Secondary/Cancel
-- Background `#F4F6F9`
-- `borderRadius: 4`, `paddingVertical: 16`
-- Texto centrado color `#0F265C`
+```
+container:
+  backgroundColor: #FFFFFF
+  borderBottomWidth: 1
+  borderBottomColor: #E0E0E0   ← borde inferior en cada ítem
 
-### Button Danger
-- Background `#D32F2F`, color texto `#FFFFFF`
+content:
+  flexDirection: 'row'
+  alignItems: 'center'
+  paddingHorizontal: 16px      (spacing.lg)
+  paddingVertical: 14px
 
-### Input de Formulario
-- Borde de 1px solid `#E0E0E0`, `padding: 12`, `borderRadius: 4`
-- Etiqueta superior (14px, bold)
-- En estado de error: border color `#D32F2F`, label rojo abajo
+name:
+  fontSize: 15, fontWeight '600', color #0F265C (primary)
 
-## 5. Iconos
-- Librería: `@expo/vector-icons` (Ionicons)
-- Header de pantalla: `business-outline` (18px)
-- Usar iconos solo donde la spec lo indique explícitamente
+id:
+  fontSize: 12, color #757575 (textMuted), marginTop: 4px (spacing.xs)
 
-## 6. Restricciones Técnicas
+chevron:
+  ChevronRightIcon, size=18, color="#CCCCCC"
+```
 
-- **PROHIBIDO:** Usar Tailwind, NativeBase, Tamagui, Styled Components o cualquier librería UI.
-- **OBLIGATORIO:** Usar `StyleSheet.create` exclusivo de React Native.
-- **TOKENS:** Siempre importar colores, spacing y borderRadius desde `shared/theme/designTokens.ts`.
+Separadores entre ítems: `ItemSeparatorComponent` con `height: 1, backgroundColor: #EEEEEE (itemBorder), marginHorizontal: 16 (spacing.lg)`.
+
+### Botón Principal (Agregar)
+
+```
+backgroundColor: #FFD200   (accent)
+borderRadius: 4px           (borderRadius.sm)
+paddingVertical: 16px       (spacing.lg)
+alignItems: 'center'
+marginTop: 32px             (spacing.xxl)
+
+texto:
+  fontSize: 16, fontWeight 'bold', color #0F265C (primary)
+```
+
+### Estados de Lista
+
+Todos comparten `stateContainer`: `flex: 1, justifyContent: 'center', alignItems: 'center', padding: 32px, minHeight: 120`.
+
+- **Loading:** `ActivityIndicator` size="large" color=primary
+- **Error:** `typography.caption` (12px, color error) con fontSize override a 14px
+- **Vacío:** 14px, color textMuted, textAlign center
+
+## 8. Iconos
+
+Librería: `react-native-svg` con iconos SVG custom en `shared/ui/icons/`.
+
+| Ícono              | Archivo            | Size default | Color default | strokeWidth |
+|--------------------|--------------------|--------------|---------------|-------------|
+| `CashIcon`         | `CashIcon.tsx`     | 24px         | primary       | 2px         |
+| `ChevronRightIcon` | `ChevronRightIcon.tsx` | 24px    | #CCCCCC       | 2px         |
+
+En la pantalla de productos: CashIcon se usa con size=20, ChevronRightIcon con size=18.
+
+## 9. Restricciones Técnicas
+
+- **PROHIBIDO:** Tailwind, NativeBase, Tamagui, Styled Components o cualquier librería UI.
+- **OBLIGATORIO:** `StyleSheet.create` exclusivo de React Native.
+- **TOKENS:** Siempre importar desde `shared/theme/designTokens.ts` → `{ colors, fonts, typography, spacing, borderRadius, shadows }`.
+- **ICONOS:** SVG custom vía `react-native-svg`. No usar `@expo/vector-icons`.

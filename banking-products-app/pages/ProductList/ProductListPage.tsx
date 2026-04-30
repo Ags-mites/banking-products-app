@@ -8,11 +8,12 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+
 import { useRouter } from 'expo-router';
 import { useProductSearch } from '../../features/productSearch/useProductSearch';
 import { ProductItem } from '../../shared/ui/ProductItem/ProductItem';
-import { colors, typography, spacing, borderRadius, shadows } from '../../shared/theme/designTokens';
+import { CashIcon } from '../../shared/ui/icons/CashIcon';
+import { colors, fonts, typography, spacing, borderRadius, shadows } from '../../shared/theme/designTokens';
 import { Product } from '../../entities/product/product.types';
 
 export function ProductListPage() {
@@ -25,68 +26,61 @@ export function ProductListPage() {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <View style={styles.outerContainer}>
-        <View style={styles.card}>
+      <View style={styles.card}>
 
-          {/* Header */}
-          <View style={styles.header}>
-            <Ionicons name="business-outline" size={18} color={colors.primary} style={styles.headerIcon} />
-            <Text style={styles.title}>BANCO</Text>
-          </View>
-
-          {/* Search */}
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search..."
-            placeholderTextColor={colors.textSecondary}
-            value={searchTerm}
-            onChangeText={setSearchTerm}
-            testID="search-input"
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-
-          {/* Counter */}
-          <Text style={styles.counter} testID="product-counter">
-            {filteredProducts.length} Productos
-          </Text>
-
-          {/* List card */}
-          <View style={styles.listCard}>
-            {loading ? (
-              <View style={styles.stateContainer}>
-                <ActivityIndicator size="large" color={colors.primary} testID="loading-indicator" />
-              </View>
-            ) : error ? (
-              <View style={styles.stateContainer}>
-                <Text style={styles.errorText} testID="error-message">{error}</Text>
-              </View>
-            ) : (
-              <FlatList
-                data={filteredProducts}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                  <ProductItem product={item} onPress={() => handleItemPress(item)} />
-                )}
-                ItemSeparatorComponent={() => <View style={styles.separator} />}
-                ListEmptyComponent={
-                  <View style={styles.stateContainer}>
-                    <Text style={styles.emptyText} testID="empty-state">
-                      No se encontraron productos
-                    </Text>
-                  </View>
-                }
-                testID="product-list"
-              />
-            )}
-          </View>
-
-          {/* Add button */}
-          <TouchableOpacity style={styles.addButton} onPress={() => {}} testID="add-button">
-            <Text style={styles.addButtonText}>Agregar</Text>
-          </TouchableOpacity>
-
+        {/* Header */}
+        <View style={styles.header}>
+          <CashIcon size={20} color={colors.primary} />
+          <Text style={styles.title}>BANCO</Text>
         </View>
+
+        {/* Search */}
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search..."
+          placeholderTextColor={colors.textSecondary}
+          value={searchTerm}
+          onChangeText={setSearchTerm}
+          testID="search-input"
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+
+        {/* List card */}
+        <View style={styles.listCard}>
+          {loading ? (
+            <View style={styles.stateContainer}>
+              <ActivityIndicator size="large" color={colors.primary} testID="loading-indicator" />
+            </View>
+          ) : error ? (
+            <View style={styles.stateContainer}>
+              <Text style={styles.errorText} testID="error-message">{error}</Text>
+            </View>
+          ) : (
+            <FlatList
+              data={filteredProducts}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <ProductItem product={item} onPress={() => handleItemPress(item)} />
+              )}
+              ItemSeparatorComponent={() => <View style={styles.separator} />}
+              ListEmptyComponent={
+                <View style={styles.stateContainer}>
+                  <Text style={styles.emptyText} testID="empty-state">
+                    No se encontraron productos
+                  </Text>
+                </View>
+              }
+              testID="product-list"
+            />
+          )}
+        </View>
+
+        {/* Add button */}
+        <TouchableOpacity style={styles.addButton} onPress={() => { }} testID="add-button">
+          <Text style={styles.addButtonText}>Agregar</Text>
+        </TouchableOpacity>
+
       </View>
     </SafeAreaView>
   );
@@ -96,10 +90,6 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: colors.appBackground,
-  },
-  outerContainer: {
-    flex: 1,
-    padding: spacing.lg,
   },
   card: {
     flex: 1,
@@ -112,26 +102,32 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: spacing.xl,
+    marginHorizontal: -spacing.xl,
+    paddingHorizontal: spacing.xl,
+    paddingBottom: spacing.md,
+    marginBottom: spacing.xxxl,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
   },
   headerIcon: {
     marginRight: spacing.sm,
   },
   title: {
     fontSize: 17,
-    fontWeight: '600',
+    fontFamily: fonts.bold,
     color: colors.primary,
+    marginLeft: spacing.sm,
   },
   searchInput: {
     height: 44,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: borderRadius.lg,
+    borderRadius: borderRadius.sm,
     paddingHorizontal: spacing.md,
     fontSize: 15,
     color: colors.textPrimary,
     backgroundColor: colors.white,
-    marginBottom: spacing.xl,
+    marginBottom: spacing.xxl,
   },
   counter: {
     fontSize: 13,
@@ -141,7 +137,7 @@ const styles = StyleSheet.create({
   listCard: {
     flex: 1,
     backgroundColor: colors.white,
-    borderRadius: borderRadius.lg,
+    borderRadius: borderRadius.md,
     borderWidth: 1,
     borderColor: colors.border,
     overflow: 'hidden',
@@ -174,7 +170,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.sm,
     paddingVertical: spacing.lg,
     alignItems: 'center',
-    marginTop: spacing.lg,
+    marginTop: spacing.xxl,
   },
   addButtonText: {
     fontSize: 16,

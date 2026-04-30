@@ -53,6 +53,7 @@ export const spacing = {
   lg: 16,
   xl: 24,
   xxl: 32,
+  xxxl: 40,
 };
 
 export const borderRadius = {
@@ -60,6 +61,12 @@ export const borderRadius = {
   md: 8,
   lg: 12,
   xl: 16,
+};
+
+export const fonts = {
+  regular: 'NotoSerifToto_400Regular',
+  semiBold: 'NotoSerifToto_600SemiBold',
+  bold: 'NotoSerifToto_700Bold',
 };
 
 export const shadows = {
