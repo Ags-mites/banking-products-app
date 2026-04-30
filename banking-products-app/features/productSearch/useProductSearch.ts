@@ -9,21 +9,17 @@ export function useProductSearch() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log('[useProductSearch] Fetching products...');
     setLoading(true);
     setError(null);
     
     getProducts()
       .then((data) => {
-        console.log('[useProductSearch] Products fetched:', data);
         setProducts(data);
       })
-      .catch((err) => {
-        console.error('[useProductSearch] Error:', err.message);
+      .catch(() => {
         setError('Error al cargar los productos. Intenta nuevamente.');
       })
       .finally(() => {
-        console.log('[useProductSearch] Loading finished');
         setLoading(false);
       });
   }, []);

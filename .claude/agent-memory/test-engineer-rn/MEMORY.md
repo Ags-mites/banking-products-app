@@ -1,2 +1,0 @@
-- [Project context](project_banking_app.md) — banking-products-app: React Native/Expo 54, React 19.1, expo-router, axios, jest-expo preset
-- [User profile](user_profile.md) — user works on React Native with Expo, requires robust testing with 70%+ coverage

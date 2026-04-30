@@ -137,7 +137,7 @@ export function ProductEditPage() {
                     {loading ? (
                       <ActivityIndicator size="small" color={colors.primary} />
                     ) : (
-                      <Text style={styles.submitButtonText}>Enviar</Text>
+                      <Text style={styles.submitButtonText}>Guardar</Text>
                     )}
                   </TouchableOpacity>
 
