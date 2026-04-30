@@ -127,15 +127,7 @@ export function ProductEditPage() {
                   <Text style={styles.networkError} testID="network-error">{networkError}</Text>
                 )}
 
-                <View style={styles.buttonRow}>
-                  <TouchableOpacity
-                    style={styles.resetButton}
-                    onPress={handleReset}
-                    testID="reset-button"
-                  >
-                    <Text style={styles.resetButtonText}>Reiniciar</Text>
-                  </TouchableOpacity>
-
+                <View style={styles.buttonCol}>
                   <TouchableOpacity
                     style={[styles.submitButton, loading && styles.buttonDisabled]}
                     onPress={handleSubmit}
@@ -147,6 +139,14 @@ export function ProductEditPage() {
                     ) : (
                       <Text style={styles.submitButtonText}>Enviar</Text>
                     )}
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.resetButton}
+                    onPress={handleReset}
+                    testID="reset-button"
+                  >
+                    <Text style={styles.resetButtonText}>Reiniciar</Text>
                   </TouchableOpacity>
                 </View>
               </>
@@ -171,7 +171,6 @@ const styles = StyleSheet.create({
     padding: spacing.xl,
   },
   card: {
-    backgroundColor: colors.white,
     borderRadius: borderRadius.xl,
     padding: spacing.xl,
     ...shadows.card,
@@ -228,8 +227,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: spacing.sm,
   },
-  buttonRow: {
-    flexDirection: 'row',
+  buttonCol: {
+    flexDirection: 'column',
     gap: spacing.md,
     marginTop: spacing.xxl,
   },

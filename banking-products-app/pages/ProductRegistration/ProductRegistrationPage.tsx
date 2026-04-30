@@ -36,6 +36,8 @@ export function ProductRegistrationPage() {
               <Text style={styles.title}>BANCO</Text>
             </View>
 
+            <Text style={styles.subtitle}>Formulario de registro</Text>
+
             <FormField
               label="ID"
               value={form.id}
@@ -105,16 +107,9 @@ export function ProductRegistrationPage() {
               </Text>
             )}
 
-            <View style={styles.buttonRow}>
-              <TouchableOpacity
-                style={styles.resetButton}
-                onPress={handleReset}
-                testID="reset-button"
-              >
-                <Text style={styles.resetButtonText}>Reiniciar</Text>
-              </TouchableOpacity>
+            <View style={styles.buttonCol}>
 
-              <TouchableOpacity
+               <TouchableOpacity
                 style={[styles.submitButton, loading && styles.buttonDisabled]}
                 onPress={handleSubmit}
                 disabled={loading}
@@ -126,6 +121,15 @@ export function ProductRegistrationPage() {
                   <Text style={styles.submitButtonText}>Enviar</Text>
                 )}
               </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.resetButton}
+                onPress={handleReset}
+                testID="reset-button"
+              >
+                <Text style={styles.resetButtonText}>Reiniciar</Text>
+              </TouchableOpacity>
+
             </View>
 
         </ScrollView>
@@ -164,6 +168,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
+  subtitle: {
+    fontSize: 24,
+    color: colors.textPrimary,
+    marginBottom: spacing.xxxl,
+    fontFamily: fonts.bold,
+  },
   title: {
     fontSize: 17,
     fontFamily: fonts.bold,
@@ -194,8 +204,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: spacing.sm,
   },
-  buttonRow: {
-    flexDirection: 'row',
+  buttonCol: {
+    flexDirection: 'column',
     gap: spacing.md,
     marginTop: spacing.xxl,
   },
