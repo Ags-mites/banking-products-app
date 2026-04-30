@@ -1,98 +1,62 @@
 ---
-description: Reglas de frontend para este proyecto (React 19 + Vite + CSS Modules). Se aplica automáticamente a archivos frontend.
+description: Reglas de frontend para React Native con Feature-Sliced Design (FSD).
 paths:
-  - "frontend/**"
-  - "client/**"
-  - "web/**"
+  - "src/**"
 ---
 
-# Reglas de Frontend — React 19 + Vite + CSS Modules
+# Reglas de Frontend — React Native + FSD
 
 ## Stack aprobado
 
-- **React 19** con **Vite**
-- **CSS Modules** (estilos locales por componente — un `.module.css` por archivo)
-- **React Router v6** (rutas de la SPA)
-- **Firebase SDK** — autenticación cliente (`onAuthStateChanged`, `signInWithEmailAndPassword`)
-- **Axios** — llamadas HTTP a la API
+- **React Native** con **Expo**
+- **TypeScript** (obligatorio)
+- **StyleSheet.create** (obligatorio, NO librerías UI)
+- **Expo Router** para navegación
+- **Axios** para llamadas HTTP
 
-**Prohibido:** Tailwind CSS, Bootstrap, styled-components, CSS-in-JS, Redux, MobX, fetch directo en componentes.
+**Prohibido:** Tailwind, NativeBase, Tamagui, styled-components, CSS-in-JS, Redux, MobX.
 
-## Arquitectura por Capas
+## Arquitectura FSD
 
 ```
-services → hooks → components → pages → App.jsx (registrar ruta)
+src/
+├── app/                  # Expo Router (_layout.tsx, index.tsx)
+├── pages/                # Vistas principales
+├── widgets/              # Bloques complejos (UI + lógica)
+├── features/             # Hooks de interacciones
+├── entities/             # Types, API client, mappers
+└── shared/
+    ├── ui/               # Componentes atómicos (Button, Input, Card)
+    ├── lib/              # Helpers (validaciones de fecha)
+    └── theme/            # Design tokens
 ```
-
-| Capa | Responsabilidad | Prohibido |
-|------|----------------|-----------|
-| `pages/` | Layout, composición de componentes, uso de hooks | Llamadas directas a API, lógica de negocio |
-| `components/` | Render UI, recibir props, emitir eventos | Estado global, llamadas a API |
-| `hooks/` | Estado local + llamadas a services | Render JSX, acceso directo a MongoDB/Firebase |
-| `services/` | Llamadas HTTP (Axios) a la API | Estado, render, lógica de negocio |
 
 ## Convenciones Obligatorias
 
-- **CSS**: SIEMPRE CSS Modules — NUNCA clases CSS globales
-- **Auth state**: SIEMPRE consumir de `useAuth()` — nunca estado de auth paralelo
-- **Variables de entorno**: SIEMPRE prefijo `VITE_` (ej. `VITE_API_URL`)
-- **API calls**: van en `services/` via Axios, token siempre desde `useAuth()`
-- **Rutas**: registrar en `src/App.jsx` con `<Route>` de React Router v6
+- **Estilos**: SIEMPRE `StyleSheet.create()` — NUNCA librerías externas
+- **API base**: `http://localhost:3002`
+- **Nombres de archivos**: PascalCase para componentes, camelCase para hooks
+- **Tests**: en `__tests__/` junto al archivo testeado
 
-## Llamadas a la API (patrón obligatorio)
+## Design System
 
-```js
-// services/featureService.js
-import axios from 'axios';
-const API_BASE = import.meta.env.VITE_API_URL;
+Ver `.claude/docs/design-system.md` para colores, tipografía y componentes.
 
-export async function getFeatures(token) {
-  const res = await axios.get(`${API_BASE}/api/v1/features`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-  return res.data;
-}
-```
+## Validaciones críticas (F4)
 
-```js
-// hooks — obtener token siempre de useAuth()
-const { token } = useAuth();
-```
+En `src/shared/lib/`:
 
-## Nomenclatura de Archivos
-
-| Artefacto | Convención | Ejemplo |
-|-----------|-----------|---------|
-| Page | `<Feature>Page.jsx` + `<Feature>Page.module.css` | `FaqPage.jsx` |
-| Component | `<Component>.jsx` + `<Component>.module.css` | `FaqFormModal.jsx` |
-| Hook | `use<Feature>.js` | `useFaq.js` |
-| Service | `<feature>Service.js` | `faqService.js` |
-
-- PascalCase para páginas y componentes (`.jsx`)
-- camelCase con prefijo `use` para hooks
-- camelCase para services
-- Máximo 4 archivos nuevos por feature (page + component + hook + service)
-
-## Estructura de Archivos de Referencia
-
-```
-frontend/src/
-├── App.jsx
-├── config/firebase.js        ← init Firebase (solo aquí)
-├── hooks/useAuth.js          ← fuente única de verdad para auth
-├── services/authService.js   ← Firebase signIn + POST API
-├── components/               ← componentes reutilizables
-└── pages/                    ← FeaturePage.jsx + FeaturePage.module.css
-```
+- `validateProductId(id)` — verificar ID único con endpoint `/bp/products/verification/:id`
+- `isValidReleaseDate(date)` — liberación >= fecha actual
+- `calculateReviewDate(releaseDate)` — revisión = liberación + 1 año
 
 ## Anti-patrones Prohibidos
 
-- Llamadas Axios directas en componentes o páginas (van en services via hooks)
-- Estado de auth duplicado fuera de `useAuth()`
-- Estilos globales / clases CSS fuera de CSS Modules
-- Lógica de negocio en componentes (va en hooks)
-- Hardcodear URLs de API (usar `VITE_API_URL`)
+- Librerías UI externas (NativeBase, React Native Paper, etc.)
+- Estilos inline fuera de StyleSheet
+- Lógica de negocio en componentes (va en features/)
+- Fetch/Axios directo en componentes (va en entities/api/)
 
-## Lineamientos completos
+## Lineamientos
 
-`.claude/docs/lineamientos/dev-guidelines.md` — Clean Code, SOLID, API REST, Seguridad, Observabilidad.
+`.claude/docs/lineamientos/dev-guidelines.md` — Clean Code, SOLID, API REST, Seguridad.

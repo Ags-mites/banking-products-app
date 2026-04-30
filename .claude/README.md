@@ -1,13 +1,10 @@
-# ASDD Framework — Guía de Uso (Claude Code)
+# ASDD Framework — React Native + FSD
 
-**ASDD** (Agent Spec Software Development) es un framework de desarrollo asistido por IA que organiza el trabajo de software en cinco fases orquestadas por agentes especializados.
+**ASDD** (Agent Spec Software Development) para proyectos React Native con Feature-Sliced Design.
 
 ```
-Requerimiento → Spec → Frontend → Tests Frontend → QA → Doc (opcional)
+Requerimiento → mobile-architect → [ui-factory ∥ logic-navigator] → test-engineer-rn → qa-agent
 ```
-
-> Esta guía cubre el uso con **Claude Code CLI**.
-> Para uso con **GitHub Copilot Chat**, ver `.github/README.md`.
 
 ---
 
@@ -17,241 +14,106 @@ Requerimiento → Spec → Frontend → Tests Frontend → QA → Doc (opcional)
 |---|---|
 | Claude Code CLI | Instalado y autenticado (`claude`) |
 | Modelo recomendado | `claude-sonnet-4-6` (configurado en `settings.json`) |
-| Permisos | `acceptEdits` activado en `settings.json` |
-
-El archivo `.claude/settings.json` ya configura modelo, permisos y hooks. No requiere configuración manual adicional.
 
 ---
 
-## Onboarding — nuevo proyecto
+## Estructura FSD (React Native)
 
-Al copiar esta carpeta `.claude/` a un proyecto nuevo, adapta estos archivos **en orden** antes de usar cualquier agente:
-
-| # | Archivo | Qué escribir |
-|---|---------|-------------|
-| 1 | `README.md` (raíz del proyecto) | Stack, arquitectura, comandos (`install`, `dev`, `test`, `build`), variables de entorno |
-| 2 | `.claude/rules/frontend.md` | Lenguaje, framework, herramientas aprobadas |
-| 3 | `.claude/rules/frontend.md` | Capas, módulos, bounded contexts |
-| 4 | `CLAUDE.md (Diccionario de Dominio)` | Términos canónicos del negocio (glosario) |
-| 5 | `CLAUDE.md` (DoR + DoD ya incluidos) | Criterios DoR y DoD del equipo |
-
-Una vez completados, los agentes tienen todo el contexto para operar de forma autónoma.
-
-**No modificar**: `agents/`, `skills/`, `rules/`, `hooks/`
+```
+src/
+├── app/                  # Expo Router (_layout.tsx, index.tsx)
+├── pages/                # Vistas principales
+├── widgets/              # Bloques complejos
+├── features/             # Interacciones con estado
+├── entities/             # Lógica de dominio (types, API, mappers)
+└── shared/
+    ├── ui/               # ATOMS/MOLECULES: Button, Input, Modal
+    ├── lib/              # Helpers (validaciones de fecha)
+    └── theme/            # design-tokens.ts
+```
 
 ---
 
-## El flujo ASDD paso a paso
+## Flujo ASDD
 
-### Paso 1 — Spec (obligatorio, siempre primero)
-
-Genera la especificación técnica antes de escribir código:
+### Paso 1 — Spec
 
 ```
 /generate-spec <nombre-feature>
 ```
 
-O invoca el agente directamente en el chat:
+O:
 ```
-@orchestrator genera la spec para: [tu requerimiento]
-```
-
-El agente valida el requerimiento y genera `.github/specs/<feature>.spec.md` con estado `DRAFT`.
-Revisa y aprueba la spec (cambia a `APPROVED`) antes de continuar.
-
----
-
-### Paso 2 — Implementación
-
-Con la spec `APPROVED`, el Orchestrator lanza frontend:
-
-```
-/asdd-orchestrate <nombre-feature>
+@spec-generator genera la spec para: [tu requerimiento]
 ```
 
-O invoca el agente directamente:
-```
-@frontend-developer implementa .github/specs/<feature>.spec.md
-```
-
----
-
-### Paso 3 — Tests
-
-Con la implementación completa:
+### Paso 2 — Arquitectura (mobile-architect)
 
 ```
-/unit-testing <nombre-feature>
+@mobile-architect analiza: [descripción del feature]
 ```
 
-O invoca el agente:
+El arquitecto planifica qué capas FSD se affected y presenta un plan para delegar.
+
+### Paso 3 — Implementación (paralelo)
+
 ```
-@test-engineer-frontend genera tests para .github/specs/<feature>.spec.md
+@ui-factory crea componentes para .github/specs/<feature>.spec.md
+@logic-navigator implementa lógica para .github/specs/<feature>.spec.md
 ```
 
----
+### Paso 4 — Tests
 
-### Paso 4 — QA
+```
+@test-engineer-rn genera tests para .github/specs/<feature>.spec.md
+```
+
+### Paso 5 — QA
 
 ```
 @qa-agent ejecuta QA para .github/specs/<feature>.spec.md
 ```
 
-El agente genera: casos Gherkin, matriz de riesgos y (si hay SLAs) plan de performance.
-
 ---
 
-### Paso 5 — Documentación *(opcional)*
+## Agentes disponibles
 
-```
-@documentation-agent documenta .github/specs/<feature>.spec.md
-```
-
----
-
-### Flujo completo con Orchestrator
-
-```
-/asdd-orchestrate <nombre-feature>
-```
-
-El Orchestrator coordina todas las fases con máximo paralelismo automáticamente.
-
----
-
-## Agentes disponibles (`.claude/agents/`)
-
-| Agente | Fase | Cómo invocar |
-|---|---|---|
-| `orchestrator` | Entry point | `@orchestrator` o `/asdd-orchestrate` |
-| `spec-generator` | Fase 1 | `@spec-generator` o `/generate-spec` |
-| `frontend-developer` | Fase 2 | `@frontend-developer` o `/implement-frontend` |
-| `test-engineer-frontend` | Fase 3 | `@test-engineer-frontend` o `/unit-testing` |
-| `qa-agent` | Fase 4 | `@qa-agent` |
-| `documentation-agent` | Fase 5 | `@documentation-agent` |
-
----
-
-## Skills disponibles (`/comando` en Claude Code)
-
-| Comando | Agente | Qué hace |
-|---|---|---|
-| `/asdd-orchestrate` | orchestrator | Orquesta el flujo completo o muestra estado actual |
-| `/generate-spec` | spec-generator | Genera spec técnica con validación INVEST/IEEE 830 |
-| `/implement-frontend` | frontend-developer | Implementa feature completo en el frontend |
-| `/unit-testing` | test-engineer-frontend | Genera suite de tests para el frontend |
-| `/gherkin-case-generator` | qa-agent | Flujos críticos + casos Given-When-Then + datos de prueba |
-| `/risk-identifier` | qa-agent | Matriz de riesgos ASD (Alto/Medio/Bajo) |
-| `/automation-flow-proposer` | qa-agent | Propone flujos a automatizar con estimación de ROI |
-| `/performance-analyzer` | qa-agent | Planifica pruebas de carga y performance |
-
----
-
-## Rules automáticas (`.claude/rules/`)
-
-Inyectadas automáticamente en el contexto de Claude según el archivo activo:
-
-| Archivo activo | Rule aplicada |
+| Agente | Rol |
 |---|---|
-| `frontend/**` | `rules/frontend.md` |
-| Cualquier archivo de modelo/DB | `rules/database.md` |
-| `frontend/src/__tests__/**` | `rules/testing.md` |
-| `.github/specs/**` | `rules/specs.md` |
-
-> Las rules son agnosticas de stack. Los detalles del stack real están en `.claude/rules/frontend.md`.
-
----
-
-## Hooks activos (`.claude/hooks/`)
-
-Ejecutados automáticamente por Claude Code según el evento:
-
-| Script | Evento | Acción |
-|---|---|---|
-| `pre-edit-protection.sh` | `PreToolUse` (Edit/Write) | Bloquea edición de archivos sensibles (`.env`, secrets) |
-| `post-spec-validate.sh` | `PostToolUse` (Write/Edit) | Valida frontmatter en archivos `.spec.md` |
-| `scripts/notify-sound.sh` | `Stop` / `SubagentStop` / `Notification` | Notificación de sonido al terminar |
-
-Ver `.claude/hooks/README.md` para documentación completa y cómo agregar hooks nuevos.
+| `mobile-architect` | Arquirecto FSD - planifica y orquesta |
+| `spec-generator` | Genera specs técnicas |
+| `ui-factory` | UI atómica - componentes puros |
+| `logic-navigator` | Lógica - hooks, services, validaciones |
+| `test-engineer-rn` | Tests - Jest + RN Testing Library |
+| `qa-agent` | QA - Gherkin, riesgos |
 
 ---
 
-## Lineamientos de referencia
+## Skills disponibles
 
-Cargados por los agentes desde `docs/` (proyecto):
-
-| Documento | Contenido |
+| Comando | Qué hace |
 |---|---|
-| `.claude/docs/lineamientos/dev-guidelines.md` | Clean Code, SOLID, API REST, Seguridad, Observabilidad |
-| `.claude/docs/lineamientos/qa-guidelines.md` | Estrategia QA, Gherkin, Riesgos, Automatización, Performance |
-| `.claude/rules/frontend.md` | Stack, herramientas aprobadas, versiones |
-| `.claude/rules/frontend.md` | Capas, estructura, patrones del proyecto |
+| `/generate-spec` | Genera spec técnica |
+| `/unit-testing` | Genera tests |
+| `/gherkin-case-generator` | Flujos críticos Gherkin |
+| `/risk-identifier` | Matriz de riesgos |
 
 ---
 
-## Estructura de carpetas
+## Design System
 
-```
-Project Root/
-│
-├── docs/output/                     ← artefactos generados por los agentes
-│   ├── qa/                          ← Gherkin, riesgos, performance
-│   ├── api/                         ← documentación de API
-│   └── adr/                         ← Architecture Decision Records
-│       ├── qa/
-│       ├── api/
-│       └── adr/
-│
-└── .claude/                         ← framework Claude Code (auto-contenido para compartir)
-    ├── README.md                    ← este archivo
-    ├── settings.json                ← modelo, permisos, hooks
-    ├── settings.local.json          ← overrides locales (no commitar)
-    │
-    ├── agents/                      ← 7 agentes (sub-agentes de Claude Code)
-    │   ├── orchestrator.md
-    │   ├── spec-generator.md
-    │   ├── frontend-developer.md
-    │   ├── test-engineer-frontend.md
-    │   ├── qa-agent.md
-    │   └── documentation-agent.md
-    │
-    ├── skills/                      ← 7 skills (/comando en Claude Code)
-    │   ├── asdd-orchestrate/
-    │   ├── generate-spec/
-    │   ├── implement-frontend/
-    │   ├── unit-testing/
-    │   ├── gherkin-case-generator/
-    │   ├── risk-identifier/
-    │   ├── automation-flow-proposer/
-    │   └── performance-analyzer/
-    │
-    ├── rules/                       ← instrucciones automáticas por path
-    │   ├── frontend.md              ← frontend/**
-    │   ├── database.md              ← models/**, repositories/**
-    │   ├── testing.md               ← __tests__/**
-    │   └── specs.md                 ← .github/specs/**
-    │
-    ├── docs/lineamientos/           ← guidelines del framework (incluidos al compartir)
-    │   ├── dev-guidelines.md
-    │   └── qa-guidelines.md
-    │
-    ├── hooks/                       ← scripts automáticos por evento
-    │   ├── pre-edit-protection.sh
-    │   └── post-spec-validate.sh
-    │
-    └── scripts/                     ← utilidades del framework
-        ├── notify-sound.bat
-        └── notify-sound.sh
-```
+Los componentes UI siguen `.claude/docs/design-system.md`:
 
-> Los archivos de contexto del proyecto viven en `docs/` (raíz del proyecto).
-> `.claude/` contiene solo metodología — agents, skills, rules, hooks.
+- Primary: `#0F265C` (Azul Marino)
+- Accent: `#FFD200` (Amarillo Banco)
+- Error: `#D32F2F`
+- StyleSheet.create obligatorio
 
 ---
 
 ## Reglas de Oro
 
-1. **No código sin spec aprobada** — siempre debe existir `.github/specs/<feature>.spec.md` con estado `APPROVED`.
-2. **No código no autorizado** — los agentes no generan ni modifican código sin instrucción explícita.
-3. **No suposiciones** — si el requerimiento es ambiguo, el agente pregunta antes de actuar.
-4. **Transparencia** — el agente explica qué va a hacer antes de hacerlo.
+1. **No código sin spec aprobada**
+2. **UI + Lógica en paralelo** - ui-factory y logic-navigator trabajan juntos
+3. **FSD estricto** - seguir la estructura de carpetas
+4. **Sin librerías UI** - solo StyleSheet.create

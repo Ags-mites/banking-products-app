@@ -1,56 +1,69 @@
 ---
-description: Principios de testing. Aplica a cualquier framework. Framework: Vitest (frontend).
+description: Reglas de testing para React Native. Framework: Jest + @testing-library/react-native.
 paths:
-  - "**/__tests__/**"
-  - "**/*.test.*"
-  - "**/*.spec.*"
+  - "src/**/__tests__/**"
+  - "src/**/*.test.ts"
+  - "src/**/*.test.tsx"
 ---
 
-# Reglas de Testing
+# Reglas de Testing — React Native
 
-## Referencia de Stack
-Lee `.claude/rules/frontend.md` para:
-- Framework de testing del proyecto (Vitest, Jest, etc.)
-- Herramientas de mock y fixtures
-- Comandos para ejecutar tests
+## Stack
 
-## Principios Universales (independiente del framework)
+- **Jest** — test runner
+- **@testing-library/react-native** — testing utilities (NO usar testing-library/web)
+- **jest.mock()** — para mocks de Axios y módulos
 
-### Estructura AAA obligatoria
+## Principios AAA
+
 ```
-// GIVEN — preparar datos y contexto
-// WHEN  — ejecutar la acción bajo prueba
-// THEN  — verificar el resultado esperado
+// Arrange — preparar datos y contexto
+// Act — ejecutar la acción bajo prueba
+// Assert — verificar el resultado esperado
 ```
 
-### Pirámide de Testing
+## Pirámide de Testing
+
 | Nivel | % recomendado | Qué cubre |
 |-------|--------------|-----------|
-| **Unitarios** | ~70% | Lógica de negocio aislada con mocks |
-| **Integración** | ~20% | Flujos entre capas, endpoints HTTP |
+| **Unitarios** | ~70% | Lógica de negocio, validaciones |
+| **Integración** | ~20% | Hooks, widgets |
 | **E2E** | ~10% | Flujos críticos de usuario |
 
-### Reglas de Oro del Testing
-- **Independencia** — cada test se puede ejecutar solo, en cualquier orden
-- **Aislamiento** — mockear SIEMPRE dependencias externas (DB, APIs, auth, tiempo)
-- **Determinismo** — sin `sleep()`, sin dependencia de fechas reales, sin datos de producción
-- **Cobertura mínima ≥ 80%** en lógica de negocio (quality gate bloqueante en CI)
-- **Nombres descriptivos** — `test_<función>_<escenario>_<resultado_esperado>`
-- **Un assert lógico por test** — si necesitas varios, separar en tests distintos
+## Reglas de Oro
 
-### Por cada unidad cubrir
-- ✅ Happy path — datos válidos, flujo exitoso
-- ❌ Error path — excepción esperada, respuesta de error
-- 🔲 Edge case — vacío, duplicado, límites, permisos
+- **Independencia** — cada test ejecutable solo
+- **Aislamiento** — mockear SIEMPRE APIs (`http://localhost:3002`)
+- **Determinismo** — sin timers, sin fechas reales
+- **Cobertura mínima ≥ 70%** en lógica de negocio
+- **Nombres descriptivos** — `test_<función>_<escenario>_<resultado>`
 
-## Anti-patrones Prohibidos
-- Tests que dependen del orden de ejecución
-- Llamadas reales a servicios externos (DB, APIs, auth)
-- `console.log` / `print` permanentes en tests
-- Lógica condicional dentro de un test (if/else)
-- Datos de producción real en fixtures
+## Cobertura obligatoria
 
-## Estrategia de Regresión
-- **Smoke suite** (`@smoke`): happy paths críticos → corre en cada PR
-- **Regresión completa** (`@regression`): todo → corre nightly o pre-release
-- Un test con `@critico` entra automáticamente al smoke suite
+Por cada función/lógica:
+- ✅ Happy path
+- ❌ Error path
+- 🔲 Edge cases (vacío, null, formato inválido)
+
+## Mocks obligatorios
+
+```typescript
+// Mock de API
+jest.mock('../../entities/api/featureApi', () => ({
+  fetchFeature: jest.fn(),
+}));
+```
+
+## Anti-patrones
+
+- Llamadas HTTP reales en tests
+- console.log permanente
+- Datos de producción
+- Tests que dependen de orden
+
+## Ejecución
+
+```bash
+npm test              # todos los tests
+npm test -- --coverage  # con cobertura
+```

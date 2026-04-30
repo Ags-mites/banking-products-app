@@ -17,8 +17,8 @@ DRAFT → APPROVED → IN_PROGRESS → IMPLEMENTED → DEPRECATED
 |--------|----------------|-----------|
 | `DRAFT` | spec-generator | Spec recién generada, pendiente de revisión |
 | `APPROVED` | Usuario / Tech Lead | Spec revisada y aprobada para implementar |
-| `IN_PROGRESS` | orchestrator | Implementación iniciada |
-| `IMPLEMENTED` | orchestrator | Código + tests + QA completos |
+| `IN_PROGRESS` | ui-factory / logic-navigator | Implementación iniciada |
+| `IMPLEMENTED` | qa-agent | Código + tests + QA completos |
 | `DEPRECATED` | Usuario | Feature descartado o reemplazado |
 
 **Regla de oro: NUNCA escribir código de implementación si la spec no está en estado `APPROVED`.**

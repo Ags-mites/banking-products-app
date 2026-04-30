@@ -1,36 +1,71 @@
 ---
 name: implement-frontend
-description: Implementa un feature completo en el frontend. Requiere spec con status APPROVED en .github/specs/.
+description: Implementa un feature completo en React Native usando FSD. Requiere spec APPROVED.
 argument-hint: "<nombre-feature>"
 ---
 
-# Implement Frontend
+# Implement Frontend — React Native + FSD
 
 ## Prerequisitos
-1. Leer spec: `.github/specs/<feature>.spec.md` — sección 2.3 (componentes, páginas, hooks)
-2. Leer stack: `.claude/rules/frontend.md`
-3. Leer arquitectura: `.claude/rules/frontend.md`
+
+1. Leer spec: `.github/specs/<feature>.spec.md`
+2. Leer design-system: `.claude/docs/design-system.md`
+
+## Estructura FSD
+
+```
+src/
+├── app/                  # Expo Router
+├── pages/                # Vistas (FeaturePage.tsx)
+├── widgets/              # Bloques complejos
+├── features/             # Hooks de interacciones
+├── entities/             # Types, API, mappers
+└── shared/
+    ├── ui/               # Componentes atómicos (Button, Input, Card)
+    ├── lib/              # Helpers (validaciones)
+    └── theme/            # Tokens
+```
 
 ## Orden de implementación
+
 ```
-services → hooks/state → components → pages/views → registrar ruta
+entities (types + api) → features (hooks) → shared/ui (componentes) → pages → widgets
 ```
 
-| Capa | Responsabilidad |
-|------|-----------------|
-| **Services** | Llamadas HTTP a la API — sin estado, sin lógica de negocio |
-| **Hooks / State** | Estado local, efectos, acciones — consume services |
-| **Components** | UI reutilizable — recibe props, emite eventos |
-| **Pages / Views** | Composición final — layout + rutas |
+## Reglas de maquetación
+
+- LEER `.claude/docs/design-system.md` antes de crear estilos
+- Usar EXCLUSIVAMENTE `StyleSheet.create()`
+- PROHIBIDO: Tailwind, NativeBase, Styled Components, librerías UI externas
 
 ## Patrones obligatorios
-- Auth state: consumir SÓLO desde el hook/store de auth del proyecto (ver contexto)
-- Variables de entorno: URL del API siempre desde variables de entorno, nunca hardcodeada
-- Token en header: `Authorization: Bearer <token>` en todas las llamadas protegidas
-- Estilos: usar ÚNICAMENTE el sistema de estilos aprobado en el proyecto (ver contexto)
 
-Ver patrones específicos en `.claude/rules/frontend.md`.
+| Capa | Ubicación | Responsabilidad |
+|------|-----------|-----------------|
+| Types | `src/entities/` | TypeScript interfaces |
+| API | `src/entities/api/` | Axios calls a `http://localhost:3002` |
+| Hooks | `src/features/<feature>/hooks/` | Estado + lógica de negocio |
+| UI | `src/shared/ui/` | Componentes puros (sin lógica) |
+| Pages | `src/pages/` | Composición final |
+| Widgets | `src/widgets/` | UI + lógica integrada |
+
+## Validaciones críticas (F4)
+
+En `src/shared/lib/`:
+
+```typescript
+// Validar ID único
+validateProductId(id: string): boolean
+
+// Fecha liberación >= hoy
+isValidReleaseDate(date: string): boolean
+
+// Fecha revisión = liberación + 1 año
+calculateReviewDate(releaseDate: string): string
+```
 
 ## Restricciones
-- Solo `frontend/` (o equivalente del proyecto).
-- No generar tests (responsabilidad de `test-engineer-frontend`).
+
+- Solo `src/` (estructura FSD)
+- No generar tests (responsabilidad de `test-engineer-rn`)
+- Sin librerías UI externas
