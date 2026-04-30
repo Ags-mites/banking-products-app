@@ -10,6 +10,7 @@ export const colors = {
   textPrimary: '#2C3E50',
   textMuted: '#757575',
   textSecondary: '#888888',
+  gray: '#e4eaf0',
   white: '#FFFFFF',
   black: '#000000',
 };

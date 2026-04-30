@@ -21,7 +21,7 @@ export function ProductListPage() {
   const { filteredProducts, searchTerm, setSearchTerm, loading, error } = useProductSearch();
 
   const handleItemPress = (product: Product) => {
-    router.push({ pathname: '/products/[id]', params: { id: product.id } });
+    router.push(`/products/${product.id}`);
   };
 
   return (
