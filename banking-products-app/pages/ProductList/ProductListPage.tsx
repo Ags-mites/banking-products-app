@@ -46,6 +46,13 @@ export function ProductListPage() {
           autoCorrect={false}
         />
 
+        {/* Counter */}
+        {!loading && !error && (
+          <Text style={styles.counter} testID="product-counter">
+            {filteredProducts.length} producto{filteredProducts.length !== 1 ? 's' : ''}
+          </Text>
+        )}
+
         {/* List card */}
         <View style={styles.listCard}>
           {loading ? (

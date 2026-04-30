@@ -10,8 +10,8 @@ export async function getProducts(): Promise<Product[]> {
 
 export async function verifyProductId(id: string): Promise<boolean> {
   try {
-    await axios.get(`${BASE_URL}/bp/products/verification/${id}`);
-    return true;
+    const response = await axios.get<boolean>(`${BASE_URL}/bp/products/verification/${id}`);
+    return !response.data; // true = disponible (el backend retorna true si el ID ya existe)
   } catch {
     return false;
   }

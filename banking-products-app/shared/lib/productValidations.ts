@@ -7,11 +7,13 @@ export function validateId(id: string): string | undefined {
 }
 
 export function validateName(name: string): string | undefined {
-  if (!name || name.length < 5) return 'Nombre no válido';
+  if (!name || name.length < 5) return 'El nombre debe tener al menos 5 caracteres';
+  if (name.length > 100) return 'El nombre no puede superar 100 caracteres';
 }
 
 export function validateDescription(desc: string): string | undefined {
-  if (!desc || desc.length < 10) return 'Descripción no válida';
+  if (!desc || desc.length < 10) return 'La descripción debe tener al menos 10 caracteres';
+  if (desc.length > 200) return 'La descripción no puede superar 200 caracteres';
 }
 
 export function validateLogo(url: string): string | undefined {
